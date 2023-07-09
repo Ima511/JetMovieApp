@@ -1,8 +1,10 @@
 package com.example.jetmovieapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.jetmovieapp.navigation.MovieNavigation
 import com.example.jetmovieapp.ui.theme.JetMovieAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +42,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
                 MyApp {
-                    MainContent()
+                    MovieNavigation()
                 }
         }
     }
@@ -48,47 +51,20 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(content: @Composable () -> Unit){
     JetMovieAppTheme {
-        Scaffold(topBar = {
-            TopAppBar(backgroundColor = Color.Magenta,
-                elevation = 5.dp) {
-                Text(text = "Movies")
-            }
-        }){
-                content()
-        }
+            content()
     }
 }
 
-@Composable
-fun MainContent(movieList: List<String> = listOf("Avataar",
-    "300",
-    "Harry Porter",
-    "Life",
-    "Happiness...",
-    "Cross the Line...",
-    "Happy Feet...",
-    "DDLJ...",
-    "3-Idiots..",
-    "Pyaar ki ye ek Kahani...",
-    "Himalayan...",
-    "Lecturar...",
-    "Hustle Breaker..."
-)){
-    Column(modifier = Modifier.padding(12.dp)) {
-        LazyColumn{
-           items(items = movieList){
-                MovieRow(movie = it)
-               }
-        }
-    }
-}
 
 @Composable
-fun MovieRow(movie: String){
+fun MovieRow(movie: String, onItemClick: (String) -> Unit = {}){
     Card(modifier = Modifier
         .padding(4.dp)
         .fillMaxWidth()
-        .height(130.dp),
+        .height(130.dp)
+        .clickable {
+            onItemClick(movie)
+        },
     shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
@@ -115,6 +91,6 @@ fun MovieRow(movie: String){
 @Composable
 fun GreetingPreview() {
         MyApp {
-            MainContent()
+                MovieNavigation()
         }
 }
